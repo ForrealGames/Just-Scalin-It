@@ -11,6 +11,12 @@ public class ThirdPersonCam : MonoBehaviour
     public Rigidbody rb;
     public float rotationSpeed;
 
+    void Start()
+    {
+        // Lock the cursor to the center of the screen and hide it
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
 
     // Update is called once per frame
     void Update()

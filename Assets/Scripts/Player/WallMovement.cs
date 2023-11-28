@@ -29,6 +29,9 @@ public class WallMovement : MonoBehaviour
     private PlayerController pc;
     private Rigidbody rb;
     public Animator Animator;
+    public AudioSource wallRunAudio; // Add this line
+    public GameObject wallRunSparksPrefab; // Add this line
+    private GameObject wallRunSparks; // Add this line
 
 
     // Start is called before the first frame update
@@ -60,6 +63,26 @@ public class WallMovement : MonoBehaviour
 
         wallRight = Physics.Raycast(raycastOrigin, -orientation.right, out rightWallhit, wallCheckDistance, wallLayer);
         wallLeft = Physics.Raycast(raycastOrigin, orientation.right, out leftWallHit, wallCheckDistance, wallLayer);
+
+        if (wallRight || wallLeft)
+        {
+            // Check if sparks prefab is not instantiated
+            if (wallRunSparks == null)
+            {
+                // Instantiate sparks prefab with a height offset of 0.2
+                Vector3 sparkSpawnPosition = transform.position + Vector3.up * 0.2f;
+                wallRunSparks = Instantiate(wallRunSparksPrefab, sparkSpawnPosition, Quaternion.identity);
+                wallRunSparks.transform.parent = transform;
+            }
+        }
+        else
+        {
+            // Destroy sparks prefab if it's instantiated
+            if (wallRunSparks != null)
+            {
+                Destroy(wallRunSparks);
+            }
+        }
     }
 
     private void StateMachine()
@@ -84,6 +107,12 @@ public class WallMovement : MonoBehaviour
     private void StartWallRun()
     {
         pc.wallRunning = true;
+
+        // Play the wall run sound effect
+        if (wallRunAudio != null)
+        {
+            wallRunAudio.Play();
+        }
 
         if (wallRight)
         {

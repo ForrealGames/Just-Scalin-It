@@ -11,10 +11,11 @@ public class RisingLava : MonoBehaviour
     public GameObject fireParticleSystemPrefab;
     public float spawnInterval = .05f;
     private float timeSinceLastSpawn = 0f;
-    private float waitToSpawn = 5f;
+    private float waitToSpawn = 6f;
     private bool fireParticlesStarted = false;
     public float fireParticleSystemDuration = 2f;
     public GameObject successScreen;
+    public AudioSource lavaCollisionSound; // Add this line
 
     private bool lavaPaused = false;
 
@@ -29,9 +30,17 @@ public class RisingLava : MonoBehaviour
         // Check if the lava collides with the player
         if (player != null && transform.position.y >= player.transform.position.y)
         {
+            // Play the lava collision sound effect
+            if (lavaCollisionSound != null)
+            {
+                lavaCollisionSound.Play();
+            }
+
             // Restart the scene
             SceneManager.LoadScene(sceneToRestart);
         }
+
+
 
         // Check if it's time to spawn a fire particle system
         if (!fireParticlesStarted)

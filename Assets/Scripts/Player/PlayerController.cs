@@ -15,7 +15,8 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 15f;
     public float wallRunSpeed;
     public bool isJumping;
-    
+    public AudioSource jumpAudio; // Add this line
+
     Vector3 moveDirection;
 
     public MovementState state;
@@ -69,6 +70,12 @@ public class PlayerController : MonoBehaviour
     {
         if (!isJumping)
         {
+            // Play the jump sound effect
+            if (jumpAudio != null)
+            {
+                jumpAudio.Play();
+            }
+
             animator.SetBool("Jump", true);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isJumping = true;
@@ -100,6 +107,8 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("WinnerCircle"))
         {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
             isJumping = false;
             animator.SetBool("Jump", false);
             SuccessUI successUIScript = FindObjectOfType<SuccessUI>();
